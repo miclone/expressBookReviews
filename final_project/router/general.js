@@ -19,20 +19,19 @@ public_users.get('/',function (req, res) {
 public_users.get('/isbn/:isbn',function (req, res) {
     if (req.params.isbn)
     {    
-        let isbnBooks = [];
+        let isbnBook = "";
         for (var id in books) {
             let book = books[id];
             if (book.isbn === req.params.isbn) {
-                let authorBook = {
+                isbnBook = {
                     "isbn": book.isbn,
                     "author": book.author,
                     "title": book.title,
                     "reviews": book.reviews
                 }
-                isbnBooks.push(authorBook);
             }
         }
-        res.send(JSON.stringify(isbnBooks,null,4));
+        res.send(JSON.stringify(isbnBook,null,4));
     } else {
         return res.status(300).json({message: "Please enter an ISBN"});
     }
