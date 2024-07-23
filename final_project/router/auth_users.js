@@ -27,26 +27,12 @@ const authenticatedUser = (username,password)=>{
     }
 }
 
-regd_users.post("/register", (req, res) => {
-    const username = req.body.username;
-    const password = req.body.password;
-    if (username && password) {
-        if (!isValid(username)) {
-            users.push({"username": username, "password": password});
-            return res.status(200).json({message: "User successfully registered. Now you can login"});
-        } else {
-            return res.status(404).json({message: "User already exists!"});
-        }
-    } 
-    return res.status(404).json({message: "Unable to register user."});
-});
-
 //only registered users can login
 regd_users.post("/login", (req,res) => {
     const username = req.body.username;
     const password = req.body.password;
     if (!username || !password) {
-        return res.status(404).json({ message: "Error logging in" });
+        return res.status(401).json({ message: "Error logging in" });
     }
     if (authenticatedUser(username, password)) {
         let accessToken = jwt.sign({
@@ -57,14 +43,18 @@ regd_users.post("/login", (req,res) => {
         }
         return res.status(200).send("User successfully logged in");
     } else {
-        return res.status(208).json({ message: "Invalid Login. Check username and password" });
+        return res.status(400).json({ message: "Invalid Login. Check username and password" });
     }
 });
 
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  if (req.params.isbn) {
+
+  }
+  else {
+    return res.status(400).json({message: "Please enter an ISBN"});
+  }
 });
 
 module.exports.authenticated = regd_users;
