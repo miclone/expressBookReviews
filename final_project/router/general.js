@@ -6,8 +6,17 @@ const public_users = express.Router();
 
 
 public_users.post("/register", (req,res) => {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  const username = req.body.username;
+    const password = req.body.password;
+    if (username && password) {
+        if (!isValid(username)) {
+            users.push({"username": username, "password": password});
+            return res.status(200).json({message: "User successfully registered. Now you can login"});
+        } else {
+            return res.status(400).json({message: "User already exists!"});
+        }
+    } 
+    return res.status(400).json({message: "Unable to register user."});
 });
 
 // Get the book list available in the shop
@@ -33,7 +42,7 @@ public_users.get('/isbn/:isbn',function (req, res) {
         }
         res.send(JSON.stringify(isbnBook,null,4));
     } else {
-        return res.status(300).json({message: "Please enter an ISBN"});
+        return res.status(400).json({message: "Please enter an ISBN"});
     }
  });
   
@@ -56,7 +65,7 @@ public_users.get('/author/:author',function (req, res) {
         }
         res.send(JSON.stringify(authorBooks,null,4));
     } else {
-        return res.status(300).json({message: "Please enter an author"});
+        return res.status(400).json({message: "Please enter an author"});
     }
 });
 
@@ -78,7 +87,7 @@ public_users.get('/title/:title',function (req, res) {
         }
         res.send(JSON.stringify(titleBook,null,4));
     } else {
-        return res.status(300).json({message: "Please enter a title"});
+        return res.status(400).json({message: "Please enter a title"});
     }
 });
 
@@ -97,7 +106,7 @@ public_users.get('/review/:isbn',function (req, res) {
         }
         res.send(JSON.stringify(reviews,null,4));
     } else {
-        return res.status(300).json({message: "Please enter an ISBN"});
+        return res.status(400).json({message: "Please enter an ISBN"});
     }
 });
 
