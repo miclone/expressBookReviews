@@ -4,7 +4,6 @@ let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
 
-
 public_users.post("/register", (req,res) => {
   const username = req.body.username;
     const password = req.body.password;
@@ -20,34 +19,36 @@ public_users.post("/register", (req,res) => {
 });
 
 // Get the book list available in the shop
-public_users.get('/',function (req, res) {
-    res.send(JSON.stringify(books,null,4));
+public_users.get('/',
+    async function (req, res) {
+    await res.send(JSON.stringify(books,null,4));
 });
 
 // Get book details based on ISBN
-public_users.get('/isbn/:isbn',function (req, res) {
-    if (req.params.isbn)
-    {    
-        let isbnBook = "";
-        for (var id in books) {
-            let book = books[id];
-            if (book.isbn === req.params.isbn) {
-                isbnBook = {
-                    "isbn": book.isbn,
-                    "author": book.author,
-                    "title": book.title,
-                    "reviews": book.reviews
+public_users.get('/isbn/:isbn',
+    async function (req, res) {
+        if (req.params.isbn) {    
+            let isbnBook = "";
+            for (var id in books) {
+                let book = books[id];
+                if (book.isbn === req.params.isbn) {
+                    isbnBook = {
+                        "isbn": book.isbn,
+                        "author": book.author,
+                        "title": book.title,
+                        "reviews": book.reviews
+                    }
                 }
             }
+            await res.send(JSON.stringify(isbnBook,null,4));
+        } else {
+            return res.status(400).json({message: "Please enter an ISBN"});
         }
-        res.send(JSON.stringify(isbnBook,null,4));
-    } else {
-        return res.status(400).json({message: "Please enter an ISBN"});
-    }
  });
   
 // Get book details based on author
-public_users.get('/author/:author',function (req, res) {
+public_users.get('/author/:author',
+    async function (req, res) {
     if (req.params.author)
     {    
         let authorBooks = [];
@@ -63,14 +64,15 @@ public_users.get('/author/:author',function (req, res) {
                 authorBooks.push(authorBook);
             }
         }
-        res.send(JSON.stringify(authorBooks,null,4));
+        await res.send(JSON.stringify(authorBooks,null,4));
     } else {
         return res.status(400).json({message: "Please enter an author"});
     }
 });
 
 // Get all books based on title
-public_users.get('/title/:title',function (req, res) {
+public_users.get('/title/:title',
+    async function (req, res) {
     if (req.params.title)
     {    
         let titleBook = "";
@@ -85,14 +87,15 @@ public_users.get('/title/:title',function (req, res) {
                 }
             }
         }
-        res.send(JSON.stringify(titleBook,null,4));
+        await res.send(JSON.stringify(titleBook,null,4));
     } else {
         return res.status(400).json({message: "Please enter a title"});
     }
 });
 
 //  Get book review
-public_users.get('/review/:isbn',function (req, res) {
+public_users.get('/review/:isbn',
+    async function (req, res) {
     if (req.params.isbn)
     {    
         let reviews;
@@ -104,7 +107,7 @@ public_users.get('/review/:isbn',function (req, res) {
                 }
             }
         }
-        res.send(JSON.stringify(reviews,null,4));
+        await res.send(JSON.stringify(reviews,null,4));
     } else {
         return res.status(400).json({message: "Please enter an ISBN"});
     }
