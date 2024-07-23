@@ -50,7 +50,7 @@ regd_users.post("/login", (req,res) => {
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
   if (req.params.isbn) {
-    let reader = req.body.reader;
+    let reader = req.session.authorization.username;
     let review = req.body.review;
     if (reader && review) {
         for (var id in books) {
@@ -65,9 +65,25 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
     }
   }
   else {
-    return res.status(400).json({message: "Please enter an ISBN"});
+    return res.status(400).json({message: "Please enter an ISBN"});    
   }
 });
+
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+    if (req.params.isbn) {
+        let reader = req.session.authorization.username;
+        for (var id in books) {
+            let book = books[id];
+            if (book.isbn === req.params.isbn) {
+                delete book.reviews[reader];
+            }
+        }
+        return res.status(200).send("Review successfully deleted");
+    }
+    else {
+      return res.status(400).json({message: "Please enter an ISBN"});
+    }
+  });
 
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
