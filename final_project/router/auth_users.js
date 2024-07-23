@@ -37,7 +37,7 @@ regd_users.post("/login", (req,res) => {
     if (authenticatedUser(username, password)) {
         let accessToken = jwt.sign({
             data: password
-        }, 'access', { expiresIn: 60 * 60 });
+        }, 'access', { expiresIn: 60 * 60 * 10 });
         req.session.authorization = {
             accessToken, username
         }
@@ -56,7 +56,7 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
         for (var id in books) {
             let book = books[id];
             if (book.isbn === req.params.isbn) {
-                book.reviews.reader = review;
+                book.reviews[reader] = review;
             }
         }
         return res.status(200).send("Review successfully added");
