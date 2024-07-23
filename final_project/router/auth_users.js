@@ -50,7 +50,19 @@ regd_users.post("/login", (req,res) => {
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
   if (req.params.isbn) {
-
+    let reader = req.body.reader;
+    let review = req.body.review;
+    if (reader && review) {
+        for (var id in books) {
+            let book = books[id];
+            if (book.isbn === req.params.isbn) {
+                book.reviews.reader = review;
+            }
+        }
+        return res.status(200).send("Review successfully added");
+    } else {
+        return res.status(400).json({message: "Please enter review"});    
+    }
   }
   else {
     return res.status(400).json({message: "Please enter an ISBN"});
